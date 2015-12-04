@@ -1,0 +1,11 @@
+# franklin: Cray XT4 dual-core AMD Opteron with Torque/Moab resource scheduler and ALPS job launcher
+# http://www.nersc.gov/nusers/systems/franklin/
+
+#PBS -q regular
+#PBS -l mppwidth=1
+#PBS -l walltime=06:00:00
+#PBS -N N8-MPI-4
+#PBS -j eo
+
+cd $PBS_O_WORKDIR
+aprun -n 1 ./IOR -f N8TrinityScript
