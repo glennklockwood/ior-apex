@@ -7,77 +7,61 @@ IOR is designed to measure parallel I/O performance at both the POSIX and MPI-IO
 level.  It will be run on a small range of nodes (file system clients), as
 described below.  All of the general run rules for APEX benchmarking apply.
 
-Observed benchmark performance shall be obtained from a file system configured
-as closely as possible to the proposed global file system.  If the proposed
-solution includes multiple file access protocols (e.g., pNFS or NFS as on
-certain platforms), benchmark results for IOR should be provided for each
-protocol.
+Observed benchmark performance shall be obtained from a storage system
+configured as closely as possible to the proposed platform storage.  If the
+proposed solution includes multiple file access protocols (e.g., pNFS and NFS)
+or multiple tiers accessible by applications, benchmark results for IOR
+shall be provided for each protocol and/or tier.
 
 Performance projections are permissible if they are derived from a similar
 system that is considered an earlier generation system.  Projections shall be
-rigorously derived, easily understood, and thoroughly documented.
-
-Benchmark results (or projections including original results) for the proposed
-system shall be reported in the APEX results spreadsheet. Note that in the
-supplied spreadsheet, the "Proposed System Node Count" entry refers to the
-value for the full, proposed system, whether benchmarked or projected. 
-
-A paper version of all completed tables shall be submitted as part of the RFP
-response. Additionally, the Offeror shall submit electronically all completed
-tables, benchmark codes, and output files and documentation on any code
-optimizations or configuration changes. The submitted source shall be in a
-form that can be readily compiled on the proposed system. 
-
-An audit trail showing any changes made to the benchmark codes must be supplied
-and it must be sufficient to determine that the changes made conform to the
-spirit of the benchmark and do not violate any specific restrictions on the
-benchmark.
-
-If performance projections are used, this must be clearly indicated. The output
-files on which the projections are based and a description of the projection
-method must be included. In addition, each system used for benchmark projections
-must be described. Enter the corresponding letter of the "System" column of
-Table 3 into the "System" column of the benchmark result tables. For solutions
-that use multiple phases of technology to offer the University the best value,
-the Offeror should duplicate the tables and provide the performance information
+rigorously derived, easily understood, and thoroughly documented.  Specifically,
+output files on which the projections are based and a description of the
+projection method must be included. In addition, each system used for benchmark
+projections must be described. Enter the corresponding letter of the "System"
+column of Table 3 into the "System" column of the benchmark result tables. For
+solutions that use multiple phases of technology to increase value, the
+Offeror shall duplicate the tables and provide the performance information
 for each phase.
 
 Build Instructions
 --------------------------------------------------------------------------------
-MPI and MPI-IO are required in order to build and run the code. The source code
-used for NERSC-8/Trinity is version 2.10.3 and it is included here.  More
-information about IOR is available on http://sourceforge.net/projects/ior-sio.
+MPI, MPI-IO, and OpenMP are required in order to build and run the code. The
+source code used for this benchmark is derived from IOR 3.0.1 and it is
+included here.  More information about IOR is available on 
+https://github.com/LLNL/ior.
 
-After extracting the archive, cd to the IOR-2.10.3 directory and type 
+After extracting the tar file,
 
-    make mpiio
+    cd ior-apex
+    ./configure
+    make
 
 which will build both the MPI-IO and the POSIX version of the code into the
-resulting executable.  
-
-Compiler options, names, etc., are in the file src/C/Makefile.config.
-
-The resulting executable is src/C/IOR and it will need to be moved up to the
-"run" subdirectory.
-
-You can also use "make clean" in the highest level directory to remove object
-(.o) files.
+resulting executable, located in `src/ior`.
 
 Run Rules
 --------------------------------------------------------------------------------
-The benchmark performance shall only be derived from runs that exhibit correct
-execution. Specific instructions to compile, execute, and report results for
-each benchmark are included in the source distribution.
+The intent of these benchmarks is to measure the performance of I/O operations
+on the platform storage under three loads:
 
-The intent of these benchmarks is to measure system performance for file read
-and write operations that access disk. Although optimizations may be possible
-that enable significant caching or buffering of the transferred data within
-system memory, and although such optimizations may be beneficial in a production
-environment, you are not permitted to engage in such optimizations for the
-benchmark runs. Consequently, the run rules are designed to defeat memory
+1. fully sequential, large-transaction reads and writes
+
+2. fully random, small-transaction reads and writes
+
+2. locally random, overlapping reads that resemble a pattern somewhere between
+   loads #1 and #2 above
+
+### Fully Sequential and Fully Random Loads (#1 and #2)
+
+Although optimizations may be possible that enable significant caching or
+buffering of the transferred data within system memory, and although such
+optimizations may be beneficial in a production environment, the Offerer 
+shall not utilize optimizations for the benchmark runs representing loads
+#1 and #2. Consequently, the run rules are designed to defeat memory
 caching effects so as to measure the throughput of the underlying disk
-subsystem. Procedures for adjusting IOR benchmark script parameters to reduce
-memory-caching effects will be provided later in the document.
+subsystem. Procedures for adjusting IOR benchmark script parameters to minimize
+page-caching effects are provided in the following section.
 
 The benchmarks should be executed in a fully-packed manner on computational
 nodes. For MPI applications, this simply implies that the number of MPI tasks
@@ -207,3 +191,21 @@ IOR will execute both read and write tests for each run, doing two
 repetitions of each and calculating the maximum values. The bandwidth numbers
 to be reported are the results listed as "Max Write" and "Max Read" measured
 in "MB/s".
+
+Benchmark results (or projections including original results) for the proposed
+system shall be reported in the APEX results spreadsheet. Note that in the
+supplied spreadsheet, the "Proposed System Node Count" entry refers to the
+value for the full, proposed system, whether benchmarked or projected. 
+
+A paper version of all completed tables shall be submitted as part of the RFP
+response. Additionally, the Offeror shall submit electronically all completed
+tables, benchmark codes, and output files and documentation on any code
+optimizations or configuration changes. The submitted source shall be in a
+form that can be readily compiled on the proposed system. 
+
+An audit trail showing any changes made to the benchmark codes must be supplied
+and it must be sufficient to determine that the changes made conform to the
+spirit of the benchmark and do not violate any specific restrictions on the
+benchmark.
+
+
