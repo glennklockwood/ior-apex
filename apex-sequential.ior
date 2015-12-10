@@ -1,114 +1,118 @@
+#
+# The following options must be defined on the command line (or below)
+#
+#   numTasks (-N)
+#
 IOR START
-# common options
-    reordertasksconstant=1 # defeat buffer cache for read after write by reordering tasks
+    reorderTasksConstant=1 # defeat buffer cache for read after write by reordering tasks
     fsync=1 # call fsync for POSIX I/O before close
     intraTestBarriers=1 # use barriers between open/read/write/close
     repetitions=2
     verbose=2
     keepFile=0
-    filePerProc=0 # 0 for parallel I/O to single file
+
     segmentCount=48000
     blockSize=1000000
 
-# POSIX one-file-per-process tests
-# 10k test
+    # POSIX one-file-per-process tests
+    # 10k test
     filePerProc=1
-    api=POSIX # MPIIO is other option
-    testFile = IOR_Posix_10k # File name
-    transferSize=10000 # I/O call size
-    RUN
+    api=POSIX
+    testFile = IOR_Posix_10k
+    transferSize=10000
+RUN
 
-# 100k test
+    # 100k test
     filePerProc=1
-    api=POSIX # MPIIO is other option
-        testFile = IOR_Posix_100k # File name
-    transferSize=100000 # I/O call size
-    RUN
+    api=POSIX
+    testFile = IOR_Posix_100k
+    transferSize=100000
+RUN
 
-# 1m test
+    # 1m test
     filePerProc=1
-    api=POSIX # MPIIO is other option
-    testFile = IOR_Posix_1m # File name
-    transferSize=1000000 # I/O call size
-    RUN
+    api=POSIX
+    testFile = IOR_Posix_1m
+    transferSize=1000000
+RUN
 
-# POSIX shared file tests
-# 10k test
+    # POSIX shared file tests
+    # 10k test
     filePerProc=0
     api=POSIX
-    testFile = IOR_Posix_10k_Sh # File name
-    transferSize=10000 # I/O call size
-    RUN
+    testFile = IOR_Posix_10k_Sh
+    transferSize=10000
+RUN
 
-# 100k test
+    # 100k test
     filePerProc=0
     api=POSIX
-    testFile = IOR_Posix_100k_Sh # File name
-    transferSize=100000 # I/O call size
-    RUN
+    testFile = IOR_Posix_100k_Sh
+    transferSize=100000
+RUN
 
-# 1m test
+    # 1m test
     filePerProc=0
     api=POSIX
-    testFile = IOR_Posix_1m_Sh # File name
-    transferSize=1000000 # I/O call size
-    RUN
+    testFile = IOR_Posix_1m_Sh
+    transferSize=1000000
+RUN
 
-# MPIIO one-file-per-process tests
-# 10k test
+    # MPIIO one-file-per-process tests
+    # 10k test
     fsync=0
-        filePerProc=1
-        api=MPIIO # Compare MPIIO to POSIX shared
-        collective=1 # enables data shipping optimization
-        testFile = IOR_MPIIO_10k # File name
-        transferSize=10000 # I/O call size
-        RUN
+    filePerProc=1
+    api=MPIIO
+    collective=1
+    testFile = IOR_MPIIO_10k
+    transferSize=10000
+RUN
 
-# 100k test
-        fsync=0
-        filePerProc=1
-        api=MPIIO
-        collective=1 # enables data shipping optimization
-        testFile = IOR_MPIIO_100k # File name
-        transferSize=100000 # I/O call size
-        RUN
-
-# 1m test
-        fsync=0
-        filePerProc=1
-        api=MPIIO
-        collective=1 # enables data shipping optimization
-        testFile = IOR_MPIIO_1m # File name
-        transferSize=1000000 # I/O call size
-    RUN
-
-# MPIIO shared file tests
-# 10k test
-        fsync=0
-    filePerProc=0
-    api=MPIIO # Compare MPIIO to POSIX shared
+    # 100k test
+    fsync=0
+    filePerProc=1
+    api=MPIIO
     collective=1 # enables data shipping optimization
-    testFile = IOR_MPIIO_10k_Sh # File name
-    transferSize=10000 # I/O call size
-    RUN
+    testFile = IOR_MPIIO_100k
+    transferSize=100000
+RUN
 
-# 100k test
-        fsync=0
+    # 1m test
+    fsync=0
+    filePerProc=1
+    api=MPIIO
+    collective=1
+    testFile = IOR_MPIIO_1m
+    transferSize=1000000
+RUN
+
+    # MPIIO shared file tests
+    # 10k test
+    fsync=0
     filePerProc=0
     api=MPIIO
-        collective=1 # enables data shipping optimization
-    testFile = IOR_MPIIO_100k_Sh # File name
-    transferSize=100000 # I/O call size
-    RUN
+    collective=1
+    testFile = IOR_MPIIO_10k_Sh
+    transferSize=10000
+RUN
 
-# 1m test
-        fsync=0
+    # 100k test
+    fsync=0
     filePerProc=0
     api=MPIIO
-        collective=1 # enables data shipping optimization
-    testFile = IOR_MPIIO_1m_Sh # File name
-    transferSize=1000000 # I/O call size
-    RUN
+    collective=1
+    testFile = IOR_MPIIO_100k_Sh
+    transferSize=100000
+RUN
+
+    # 1m test
+    fsync=0
+    filePerProc=0
+    api=MPIIO
+    collective=1
+    testFile = IOR_MPIIO_1m_Sh
+    transferSize=1000000
+RUN
 
 IOR STOP
 

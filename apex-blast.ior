@@ -1,8 +1,7 @@
 #
-# You must define the following on the command line (or below)
+# The following options must be defined on the command line (or below)
 #
 #   numTasks (-N)
-#   testFile (-o)
 #
 IOR START
     verbose=3
@@ -15,7 +14,7 @@ IOR START
     api=POSIX
     randomOffset=0
 
-    testFile=/scratch/ior.data
+    testFile=blast.data
     keepFile=0
 
     repetitions=1
