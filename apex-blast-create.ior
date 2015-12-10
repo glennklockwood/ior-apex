@@ -1,0 +1,32 @@
+#
+# The following options must be defined on the command line (or below)
+#
+#   numTasks (-N)
+#
+IOR START
+    api=POSIX
+    randomOffset=0
+    blastMode=0
+
+    # filePerProc=1 will create (for writes) or open (for reads) files named
+    #   according to the format "testFile.%08d" where the %08d is the IOR
+    #   MPI rank.  For example, MPI rank #1 will use blast.data.00000001 in
+    #   the following settings:
+    filePerProc=1
+    testFile=blast.data
+    keepFile=1
+
+    repetitions=1
+    checkRead=0
+    checkWrite=0
+
+    # recall that blockSize * segmentCount = fileSize when filePerProc=1
+    segmentCount=512
+    blockSize=10M
+    transferSize=1M
+
+    readFile=0
+    writeFile=1
+RUN
+
+IOR STOP
