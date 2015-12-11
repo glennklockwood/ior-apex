@@ -1,13 +1,13 @@
 Crossroads/NERSC-9 IOR Benchmark 
 ================================================================================
 
-Benchmark Description
+I. Benchmark Description
 --------------------------------------------------------------------------------
 IOR is designed to measure parallel I/O performance at both the POSIX and MPI-IO
 level.  All of the general run rules for APEX benchmarking apply.
 
 
-Build Instructions
+II. Build Instructions
 --------------------------------------------------------------------------------
 MPI, MPI-IO, and OpenMP are required in order to build and run the code. The
 source code used for this benchmark is derived from IOR 3.0.1 and it is
@@ -23,13 +23,12 @@ After extracting the tar file,
 This will build both IOR with the POSIX and MPI-IO interfaces and create the
 IOR executable located in `src/ior`.
 
-Run Rules
+III. Run Rules
 --------------------------------------------------------------------------------
 The intent of these benchmarks is to measure the performance of I/O operations
 on the platform storage under two loads:
 
 1. fully sequential, large-transaction reads and writes
-
 2. locally random, overlapping, small-transaction reads 
 
 Observed benchmark performance shall be obtained from a storage system
@@ -41,7 +40,7 @@ shall be provided for each protocol and/or tier.
 Performance projections are permissible if they are derived from a similar
 system that is considered an earlier generation of the proposed system.
 
-### Load 1. Sequential Loads
+### Load 1: Sequential Loads
 
 This benchmark is intended to measure the throughput of the storage subsystem
 and contains features that minimize caching/buffering effects.  As such, the
@@ -57,9 +56,9 @@ The Offeror shall run the following tests:
 
 Each of these four tests must be run at the following levels of concurrency:
 
-a) a single compute node
-b) 10% of the proposed system's compute nodes
-c) 50% of the proposed system's compute nodes
+1. a single compute node
+2. 10% of the proposed system's compute nodes
+3. 50% of the proposed system's compute nodes
 
 These tests must be configured via a combination of input configuration files
 and command line options.  Annotated input configuration files are provided in
@@ -98,21 +97,21 @@ The total fileSize is given by
     fileSize = segmentCount * blockSize * numTasks
 
 So for a 10-node test with an aggregate 320 GB of DRAM, fileSize must be 480 GB.
-Assuming the optimal blockSize=1 MB and numTasks=40 (4 MPI processes per node),
-an appropriate segmentCount would be
+Assuming the optimal `blockSize=1MB` and `numTasks=40` (4 MPI processes per node),
+an appropriate `segmentCount` would be
 
     segmentCount = fileSize / ( blockSize * numTasks ) = 12
 
-Page caches on the storage subsystem servers may still be used, but they must be
-configured as they would be for the delivered Crossroads/NERSC-9 systems.
+Page caches on the storage subsystem's servers may still be used, but they must
+be configured as they would be for the delivered Crossroads/NERSC-9 systems.
 
 Providing an MPI-IO "hints" file for the MPI-IO runs, which the program will
 look for in a file called "hintfile" (or in a file specified by the
-hintsFileName keyword in the input file), is allowed.
+`hintsFileName` keyword in the input file), is allowed.
 
-### Load 2. Localized Random Read Load
+### Load 2: Localized Random Read Load
 
-This benchmark is designed to emulate the I/O workload that results from an
+This benchmark is designed to emulate the I/O workload from an
 application that comprises a significant fraction of the bioinformatics
 workload at NERSC.  This benchmark runs as a hybrid MPI+OpenMP application
 where each MPI process reads its own input file, and each OpenMP thread
@@ -133,8 +132,8 @@ The Offeror shall run the following tests:
 
 Each of these four tests must be run at the following levels of concurrency:
 
-a) a single compute node
-b) 10% of the proposed system's compute nodes
+1. a single compute node
+2. 10% of the proposed system's compute nodes
 
 These tests must be configured via a combination of input configuration files
 and command line options.  Annotated input configuration files are provided in
@@ -159,92 +158,113 @@ In addition, the Offeror MAY modify the following parameters for each test:
 
 Because this test is a read-only test, the input data files to be read by IOR
 must be generated before these benchmark tests are run.  This can be done either
-using dd (e.g., `dd if=/dev/urandom of=/scratch/blast.data bs=1G count=5` would
-generate a 5 GB input file for `testFile=/scratch/blast.data`) or using a
-separate IOR run.  An example IOR input to do this is included in the 
-`inputs.apex/` subdirectory.
+using the standard `dd` command, e.g., 
+
+    dd if=/dev/urandom of=/scratch/blast.data bs=1G count=5
+
+or using a separate IOR run (whose performance would NOT be reported).  An
+example IOR input to do this is included in the `inputs.apex/` subdirectory.
+
+However, it is critical to ensure that the input data files are NOT in the 
+nodes' page cache before the benchmark is run.  This can be achieved by
+executing the following on all compute nodes immediately before running the
+Load 2 benchmark:
+
+    su -c "echo 1 > /proc/sys/vm/drop_caches"
 
 ### Running IOR
 
-The exact execution line cannot be provided here, as it depends on the
-particular MPI implementation.  A generic execution line might be:
+IOR is executed as any other standard MPI application would be on the proposed
+system.  For example,
 
-    mpirun -np 64 ./IOR -f ./ N8TrinityScript
+    mpirun -np 64 ./ior -f ./load1-posix-filepertask.ior
 
-This command will execute IOR on 64 clients with the supplied input
-configuration file called "N8TrinityScript".
+or
 
-Six sample batch submission scripts (run.platform.n, where platform refers to
-the job scheduler used, and n refers to the number of MPI processes to be
-used with this file) are provided that contain the execution lines for all
-required runs. 
+    srun -n 64 ./ior -f ./load1-posix-filepertask.ior
 
-For each run the program does eight repetitions of the write/read process. 
-The maximum values are calculated and these values are to be reported as the
-benchmark result.
+will execute IOR with 64 processes and use the input configuration file called
+`load1-posix-filepertask.ior`.
 
-Permitted Modifications
+Example input configuration files for all required tests are supplied in the
+`inputs.apex/` directory with additional annotations and details where
+appropriate.
+
+IV. Permitted Modifications
 --------------------------------------------------------------------------------
-Modifications to the benchmark are only permissible to enable correct
-execution on the target platform.  Any modifications must be fully documented
-and reported back to NERSC/ACES.  Changes related to optimization and tuning
-must be practical for production utilization of the filesystem.  For example,
-optimizations that are tuning hints that can be controlled by users on the
-system are permissible, but optimizations that would require superuser
-privilege (but are not part of the steady-state configuration of the
-filesystem) are not permissible.  
 
-Reporting Results
+Modifications to the benchmark application code are only permissible to enable
+correct compilation and execution on the target platform.  Any modifications
+must be fully documented (e.g., as a diff or patch file) and reported with the
+benchmark results.
+
+V. Reporting Results
 --------------------------------------------------------------------------------
-For all runs it is required to report the maximum write and maximum read
-bandwidth. Write bandwidth is the most important, so when in doubt report the
-parameters where maximum write bandwidth was achieved.
 
-IOR will execute both read and write tests for each run, doing two
-repetitions of each and calculating the maximum values. The bandwidth numbers
-to be reported are the results listed as "Max Write" and "Max Read" measured
-in "MB/s".
+### Load 1: Sequential Loads
+
+IOR will execute both read and write tests for each run.  The bandwidth
+measurements to be reported are the `Max Write` and `Max Read` values (in 
+units of `MB/s`) reported to stdout.
+
+The maximum write and read bandwidths for a single read-and-write test must be
+reported for Load 1.  Reporting the maximum read bandwidth from one run and the
+maximum write bandwidth from a different run is NOT valid.  Write bandwidth
+has slightly higher importance for this test, so if the highest observed read
+rate came from a different run than the highest observed write rate, report the
+results from the run with the highest write rate.
+
+### Load 2: Localized Random Read Load
+
+IOR will execute a read test for each run.  The bandwidth measurement to be
+reported is the `Max Read` value (in units of `MB/s`) reported to stdout.
 
 ### Benchmark Platform Description
 
-The Offeror must also provide an end-to-end description of the environment
-in which each benchmark was run.  This will include:
+In addition to maximum bandwidths, the Offeror must also provide a comprehensive
+description of the environment in which each benchmark was run.  This must
+include:
 
 * Client and server system configurations, including node and processor counts,
   processor models, memory size and speed, and OS (names and versions)
-* Storage used for global file system and storage configurations.
+* Storage media and their configurations used for each tier of the storage
+  subsystem
 * Network fabric used to connect servers, clients, and storage, including
-  network configuration settings.  
-* Client and server configuration settings.  These should include:
+  network configuration settings and topology
+* Client and server configuration settings including
     * Client and server sysctl settings
     * Driver options
     * Network interface options
-    * File system configuration options
+    * File system configuration and mount options
 * Compiler name and version, compiler options, and libraries used to build
-  benchmarks.
+  benchmarks
 
 ### Performance Projections
 
-Benchmark results (or projections including original results) for the proposed
-system shall be reported in the APEX results spreadsheet. Projections shall be
-rigorously derived, easily understood, and thoroughly documented.  Specifically,
-output files on which the projections are based and a description of the
-projection method must be included. In addition, each system used for benchmark
-projections must be described. Enter the corresponding letter of the "System"
-column of Table 3 into the "System" column of the benchmark result tables. For
-solutions that use multiple phases of technology to increase value, duplicate
-the tables and provide the performance information for each phase.
+Benchmark results (or projections) for the proposed system shall be reported
+in the APEX results spreadsheet. Projections shall be rigorously derived and
+documented.  Specifically, the output files (including stdout and stderr) on
+which the projections are based, as well as a description of the projection
+method, must be included.  
+
+In addition, each system used for benchmark projections must be described per
+the "Benchmark Platform Description" section above.  Enter the corresponding
+letter of the "System" column of Table 3 into the "System" column of the
+benchmark result tables.  For proposals that call for a phased deployment of
+technology, duplicate the tables and provide the performance information for
+each proposed phase.
 
 Note that in the supplied spreadsheet, the "Proposed System Node Count" entry
 refers to the value for the full, proposed system, whether benchmarked or
-projected. 
+projected.  The benchmark data from which projections are derived should be
+included separately from the spreadsheet.
 
 ### Code Modifications
 
-An audit trail showing any changes made to the benchmark codes must be supplied
-and it must be sufficient to determine that the changes made conform to the
-spirit of the benchmark and do not violate any specific restrictions on the
-benchmark.
+If the benchmark code is modified (per Section IV, Permitted Modifications),
+a complete history of changes made to the benchmark code must be supplied.
+These changes should take the form of one or more diffs (or patch files) along
+with documentation justifying the changes.
 
 ### Submission of Results
 
