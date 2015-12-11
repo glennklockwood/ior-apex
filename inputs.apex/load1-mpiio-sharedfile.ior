@@ -14,7 +14,7 @@ IOR START
     transferSize=1M         # size of a single data buffer to be transferred by a single I/O call.  You must find the optimal transferSize for the storage system.
     blockSize=1M            # must be the same as transferSize
     testFile=datafile.dat   # will read/write files called ./datafile.dat.00000000, ./datafile.dat.00000001, etc
-    collective=0            # when api=MPIIO, use collectives (e.g., MPI_File_read_all) instead of independent calls (e.g., MPI_File_read)
+    collective=1            # when api=MPIIO, use collectives (e.g., MPI_File_read_all) instead of independent calls (e.g., MPI_File_read)
 
 ### You MUST NOT change the following parameters
     reorderTasksConstant=1  # each node n writes data; that data is then read by node n+1
@@ -25,8 +25,8 @@ IOR START
     fsync=1                 # when api=POSIX, call fsync(2) before close(2)
 
 ### The following parameters define the nature of the benchmark test
-    api=POSIX               # use POSIX open/close/read/write
-    filePerProc=1           # read/write one file per MPI process
+    api=MPIIO               # use POSIX open/close/read/write
+    filePerProc=0           # read/write one file per MPI process
 
 RUN                         # run the above configuration
 

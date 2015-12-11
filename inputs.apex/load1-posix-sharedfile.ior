@@ -26,7 +26,7 @@ IOR START
 
 ### The following parameters define the nature of the benchmark test
     api=POSIX               # use POSIX open/close/read/write
-    filePerProc=1           # read/write one file per MPI process
+    filePerProc=0           # read/write one file per MPI process
 
 RUN                         # run the above configuration
 
