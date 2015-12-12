@@ -96,18 +96,19 @@ The total fileSize is given by
 
     fileSize = segmentCount * blockSize * numTasks
 
-So for a 10-node test with an aggregate 320 GB of DRAM, fileSize must be 480 GB.
-Assuming the optimal `blockSize=1MB` and `numTasks=40` (4 MPI processes per node),
-an appropriate `segmentCount` would be
+So for a 10-node test with an aggregate 640 GB of DRAM, fileSize must be 960 GB.
+Assuming the optimal `blockSize=1MB` and `numTasks=240` (24 MPI processes per
+node), an appropriate `segmentCount` would be
 
-    segmentCount = fileSize / ( blockSize * numTasks ) = 12
+    segmentCount = fileSize / ( blockSize * numTasks ) = 4096
 
 Page caches on the storage subsystem's servers may still be used, but they must
 be configured as they would be for the delivered Crossroads/NERSC-9 systems.
 
-Providing an MPI-IO "hints" file for the MPI-IO runs, which the program will
-look for in a file called "hintfile" (or in a file specified by the
-`hintsFileName` keyword in the input file), is allowed.
+Providing an MPI-IO "hints" file for the MPI-IO runs, which IOR will look for in
+the file specified by the `hintsFileName` keyword in the input file, is allowed.
+Documentation on IOR's support for MPI-IO hints can be found in the "HOW DO I
+USE HINTS?" section of the IOR User Guide (found in `doc/USER_GUIDE`).
 
 ### Load 2: Localized Random Read Load
 
