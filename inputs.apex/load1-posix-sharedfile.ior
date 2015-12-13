@@ -7,27 +7,27 @@ IOR START
 
 ### You MUST change the following parameters (see README.APEX)
     numTasks=240            # number of MPI processes to use.  You may choose to use one or more MPI processes per node.
-    segmentCount=4096       # must be > fileSize / ( blockSize * numTasks ), where fileSize must be greater than 1.5 times the aggregate DRAM available for use by the page cache
-    memoryPerNode=52G       # must be >80% of the node's DRAM available for use by the page cache
+    segmentCount=4096       # must be > fileSize / ( blockSize * numTasks ) where fileSize must be greater than 1.5 times the aggregate DRAM available for use by the page cache
+    memoryPerNode=52G       # must be > 80% of the node's DRAM available for use by the page cache
 
 ### You MAY change the following parameters
     transferSize=1M         # size of a single data buffer to be transferred by a single I/O call.  You must find the optimal transferSize for the storage system.
     blockSize=1M            # must be the same as transferSize
-    testFile=datafile.dat   # will read/write files called ./datafile.dat.00000000, ./datafile.dat.00000001, etc
-    collective=0            # when api=MPIIO, use collectives (e.g., MPI_File_read_all) instead of independent calls (e.g., MPI_File_read)
+    testFile=datafile.dat   # will read/write files called ./datafile.dat.00000000 ./datafile.dat.00000001 etc
+    collective=0            # when api=MPIIO use collectives (e.g. MPI_File_read_all) instead of independent calls (e.g. MPI_File_read)
 
 ### You MUST NOT change the following parameters
     reorderTasksConstant=1  # each node n writes data; that data is then read by node n+1
     intraTestBarriers=1     # use barriers between open/read/write/close
-    repetitions=1           # you may run the same test multiple times, but ensure that all nodes' page caches are flushed before re-running IOR
+    repetitions=1           # you may execute the same test multiple times but ensure that all nodes' page caches are flushed before re-running IOR
     verbose=2               # print additional information about the job geometry
-    keepFile=0              # delete files generated during write test at the end of each run
-    fsync=1                 # when api=POSIX, call fsync(2) before close(2)
+    keepFile=0              # delete files generated during write test at the end of each execution
+    fsync=1                 # when api=POSIX call fsync(2) before close(2)
 
 ### The following parameters define the nature of the benchmark test
     api=POSIX               # use POSIX open/close/read/write
     filePerProc=0           # read/write one file per MPI process
 
-RUN                         # run the above configuration
+RUN
 
 IOR STOP
