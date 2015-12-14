@@ -16,20 +16,22 @@ https://github.com/LLNL/ior.
 
 After extracting the tar file,
 
-    cd ior-apex
+    cd ior-3.0.1-apex
     ./configure
     make
 
 This will build both IOR with the POSIX and MPI-IO interfaces and create the
 IOR executable located in `src/ior`.
 
+
 III. Run Rules
 --------------------------------------------------------------------------------
 The intent of these benchmarks is to measure the performance of I/O operations
-on the platform storage under two loads:
+on the platform storage under three loads:
 
 1. fully sequential, large-transaction reads and writes
 2. locally random, overlapping, small-transaction reads 
+3. fully random, small-transaction reads and writes
 
 Observed benchmark performance shall be obtained from a storage system
 configured as closely as possible to the proposed platform storage.  If the
@@ -62,14 +64,14 @@ Each of these four tests must be run at the following levels of concurrency:
 
 These tests must be configured via a combination of input configuration files
 and command line options.  Annotated input configuration files are provided in
-the `inputs.apex/` subdirectory that demonstrate how these tests can be defined
+the `inputs.apex/` subdirectory and demonstrate how these tests can be defined
 for the purposes of these benchmarks.
 
 The Offeror MUST modify the following parameters for each benchmark test:
 
 * `numTasks` - the number of MPI processes to use.  The Offeror may choose to
-  run however multiple MPI processes per compute node to achieve the highest
-  bandwidth results.
+  run multiple MPI processes per compute node to achieve the highest bandwidth
+  results.
 * `segmentCount` - number of segments (blocks * numTasks) in a file.  This
   governs the size of the file(s) written/read, and the amount of data 
   written/read by each node must exceed 1.5 times the memory available for the
@@ -110,7 +112,7 @@ the file specified by the `hintsFileName` keyword in the input file, is allowed.
 Documentation on IOR's support for MPI-IO hints can be found in the "HOW DO I
 USE HINTS?" section of the IOR User Guide (found in `doc/USER_GUIDE`).
 
-### Load 2: Localized Random Read Load
+### Load 2: Localized Random Read Loads
 
 This benchmark is designed to emulate the I/O workload from an
 application that comprises a significant fraction of the bioinformatics
@@ -138,7 +140,7 @@ Each of these four tests must be run at the following levels of concurrency:
 
 These tests must be configured via a combination of input configuration files
 and command line options.  Annotated input configuration files are provided in
-the `inputs.apex/` subdirectory that demonstrate how these tests can be defined
+the `inputs.apex/` subdirectory and demonstrate how these tests can be defined
 for the purposes of these benchmarks.
 
 The Offeror MUST modify the following parameters for each benchmark test:
@@ -173,6 +175,61 @@ Load 2 benchmark:
 
     su -c "echo 1 > /proc/sys/vm/drop_caches"
 
+### Load 3: Fully Random Loads
+
+As with Load 1, this benchmark is intended to measure the throughput of the
+storage subsystem and contains features that minimize caching/buffering effects.
+As such, the Offerer should not utilize optimizations that cache or buffer the
+transferred data in system memory.
+
+The Offeror shall run the following tests:
+
+* POSIX I/O file per process 
+* POSIX I/O shared file 
+
+Both of these tests must be run at the following levels of concurrency:
+
+1. a single compute node
+2. 10% of the proposed system's compute nodes
+
+These tests must be configured via a combination of input configuration files
+and command line options.  Annotated input configuration files are provided in
+the `inputs.apex/` subdirectory and demonstrate how these tests can be defined
+for the purposes of these benchmarks.
+
+The Offeror MUST modify the following parameters for each benchmark test:
+
+* `numTasks` - the number of MPI processes to use.  The Offeror may choose to
+  run multiple MPI processes per compute node to achieve the highest bandwidth
+  results.
+* `segmentCount` - number of segments (blocks * numTasks) in a file.  This
+  governs the size of the file(s) written/read, and the amount of data 
+  written/read by each node must exceed 1.5 times the memory available for the
+  file system's page cache (typically the entire node's DRAM).
+* `memoryPerNode` - size (in bytes) of each node's DRAM to be filled before
+  running the benchmark test.  This value must be no less than 80% of the total
+  DRAM available on each compute node and is intended to represent the memory
+  footprint of a real application.
+
+In addition, the Offeror MAY modify the following parameter for each test:
+
+* `testFile` - path to data files to be read or written for this benchmark
+
+As mentioned above, `segmentCount` must be set so that the total amount of
+data written is greater than 1.5 times the amount of DRAM on the compute nodes.
+The total fileSize is given by
+
+    fileSize = segmentCount * 4K * numTasks
+
+So for a 10-node test with an aggregate 640 GB of DRAM, fileSize must be 960 GB.
+Assuming `numTasks=240` (24 MPI processes per node), an appropriate 
+`segmentCount` would be
+
+    segmentCount = fileSize / ( 4K * numTasks ) = 1048576
+
+Page caches on the storage subsystem's servers may still be used, but they must
+be configured as they would be for the delivered Crossroads/NERSC-9 systems.
+
 ### Running IOR
 
 IOR is executed as any other standard MPI application would be on the proposed
@@ -191,6 +248,7 @@ Example input configuration files for all required tests are supplied in the
 `inputs.apex/` directory with additional annotations and details where
 appropriate.
 
+
 IV. Permitted Modifications
 --------------------------------------------------------------------------------
 
@@ -198,6 +256,7 @@ Modifications to the benchmark application code are only permissible to enable
 correct compilation and execution on the target platform.  Any modifications
 must be fully documented (e.g., as a diff or patch file) and reported with the
 benchmark results.
+
 
 V. Reporting Results
 --------------------------------------------------------------------------------
@@ -219,6 +278,18 @@ results from the run with the highest write rate.
 
 IOR will execute a read test for each run.  The bandwidth measurement to be
 reported is the `Max Read` value (in units of `MB/s`) reported to stdout.
+
+### Load 3: Fully Random Loads
+
+IOR will execute both read and write tests for each run.  The bandwidth
+measurements to be reported are the `Max Write` and `Max Read` values (in 
+units of `MB/s`) reported to stdout.
+
+As with Load 1, the maximum write and read bandwidths for a single 
+read-and-write test must be reported for Load 3.  Read bandwidth has slightly
+higher importance for this test, so report results from the run with the highest
+read rate.
+
 
 ### Benchmark Platform Description
 
