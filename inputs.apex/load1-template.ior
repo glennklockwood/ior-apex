@@ -23,6 +23,7 @@ IOR START
     verbose=2               # print additional information about the job geometry
     keepFile=0              # delete files generated during write test at the end of each execution
     fsync=1                 # for POSIX api call fsync(2) before close(2)
+    randomOffset=0          # randomize order in which reads/writes occur
 
 ### The following parameters define the nature of the benchmark test
     api=MPIIO               # use POSIX open/close/read/write
