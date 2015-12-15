@@ -15,7 +15,10 @@ INPUTS_APEX = load1-posix-filepertask.ior \
               load1-mpiio-filepertask.ior \
               load1-mpiio-sharedfile.ior \
               load2-generate-testFile.ior \
-              load2-filepertask.ior
+              load2-posix-filepertask.ior \
+              load2-posix-sharedfile.ior \
+              load3-posix-filepertask.ior \
+              load3-posix-sharedfile.ior
 
 all: $(PACKAGE).tar.gz
 
