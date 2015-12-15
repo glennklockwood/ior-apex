@@ -279,6 +279,15 @@ results from the run with the highest write rate.
 IOR will execute a read test for each run.  The bandwidth measurement to be
 reported is the `Max Read` value (in units of `MB/s`) reported to stdout.
 
+If the input data file(s) are replicated, moved, or otherwise staged prior
+to the launch of this test, the following data must also be provided:
+
+1. time to move or replicate the data file(s) 
+2. a description of how this data motion was achieved (e.g., via a resource
+   specification in the job script) 
+3. the total amount of data moved to prepare the input data for the benchmark
+   (e.g., `3 * fileSize` if the file is replicated three times)
+
 ### Load 3: Fully Random Loads
 
 IOR will execute both read and write tests for each run.  The bandwidth
