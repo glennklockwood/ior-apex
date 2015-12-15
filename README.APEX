@@ -14,14 +14,15 @@ source code used for this benchmark is derived from IOR 3.0.1 and it is
 included here.  More information about IOR is available on 
 https://github.com/LLNL/ior.
 
-After extracting the tar file,
+After extracting the tar file, ensure that the MPI compiler wrappers (e.g.,
+`mpicc`) are in `$PATH` and then
 
     cd ior-3.0.1-apex
     ./configure
     make
 
 This will build both IOR with the POSIX and MPI-IO interfaces and create the
-IOR executable located in `src/ior`.
+IOR executable at `src/ior`.
 
 
 III. Run Rules
@@ -47,7 +48,7 @@ system that is considered an earlier generation of the proposed system.
 This benchmark is intended to measure the throughput of the storage subsystem
 and contains features that minimize caching/buffering effects.  As such, the
 Offerer should not utilize optimizations that cache or buffer the transferred
-data in system memory.
+data in compute node memory.
 
 The Offeror shall run the following tests:
 
@@ -83,11 +84,10 @@ The Offeror MUST modify the following parameters for each benchmark test:
 
 In addition, the Offeror MAY modify the following parameters for each test:
 
-* `transferSize` and `blockSize` - `transferSize` is the size (in bytes) of a
-   single data buffer to be transferred in a single I/O call.  The Offeror
-   should find the transferSize that produces the highest bandwidth results
-   and report this optimal transferSize.  `blockSize` must always be equal to
-   transferSize.
+* `transferSize` - the size (in bytes) of a single data buffer to be transferred
+   in a single I/O call.  The Offeror should find the transferSize that produces
+   the highest bandwidth results and report this optimal transferSize.
+   `blockSize` must always be equal to `transferSize`.
 * `testFile` - path to data files to be read or written for this benchmark
 * `hintsFileName` - path to MPI-IO hints file
 * `collective` - MPI-IO collective vs. independent operation mode
@@ -99,8 +99,8 @@ The total fileSize is given by
     fileSize = segmentCount * blockSize * numTasks
 
 So for a 10-node test with an aggregate 640 GB of DRAM, fileSize must be 960 GB.
-Assuming the optimal `blockSize=1MB` and `numTasks=240` (24 MPI processes per
-node), an appropriate `segmentCount` would be
+Assuming `blockSize=1MB` and `numTasks=240` (24 MPI processes per node) is
+optimal, an appropriate `segmentCount` would be
 
     segmentCount = fileSize / ( blockSize * numTasks ) = 4096
 
@@ -117,7 +117,7 @@ USE HINTS?" section of the IOR User Guide (found in `doc/USER_GUIDE`).
 This benchmark is designed to emulate the I/O workload from an
 application that comprises a significant fraction of the bioinformatics
 workload at NERSC.  This benchmark runs as a hybrid MPI+OpenMP application
-where each MPI process reads its own input file, and each OpenMP thread
+where each OpenMP thread
 
 1. obtains a lock that prevents other threads from performing IO
 2. reads a 10 MB block of the input file sequentially using 4K transfers
@@ -125,7 +125,7 @@ where each MPI process reads its own input file, and each OpenMP thread
 4. re-reads the 10 MB block of input using 4K transactions without locking
 5. repeats the process starting at step #1
 
-The result of multiple threads executing Step #4 is localizized random I/O and
+The result of multiple threads executing Step #4 is localized random I/O and
 nontrivial queue depths.
 
 The Offeror shall run the following tests:
@@ -163,13 +163,13 @@ Because this test is a read-only test, the input data files to be read by IOR
 must be generated before these benchmark tests are run.  This can be done either
 using the standard `dd` command, e.g., 
 
-    dd if=/dev/urandom of=/scratch/blast.data bs=1G count=5
+    dd if=/dev/urandom of=/scratch/datafile.dat bs=1G count=5
 
 or using a separate IOR run (whose performance would NOT be reported).  An
 example IOR input to do this is included in the `inputs.apex/` subdirectory.
 
 However, it is critical to ensure that the input data files are NOT in the 
-nodes' page cache before the benchmark is run.  This can be achieved by
+compute nodes' page cache before the benchmark is run.  This can be achieved by
 executing the following on all compute nodes immediately before running the
 Load 2 benchmark:
 
