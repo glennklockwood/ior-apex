@@ -8,7 +8,8 @@ PACKAGE=ior-3.0.1-apex
 TARFILE_CONTENTS = $(PACKAGE)/configure $(PACKAGE)/README \
                    $(PACKAGE)/COPYRIGHT $(PACKAGE)/testing \
                    $(PACKAGE)/contrib $(PACKAGE)/doc \
-                   $(PACKAGE)/scripts $(PACKAGE)/src
+                   $(PACKAGE)/scripts $(PACKAGE)/src \
+                   $(PACKAGE)/config
 
 INPUTS_APEX = load1-posix-filepertask.ior \
               load1-posix-sharedfile.ior \
@@ -43,5 +44,8 @@ $(PACKAGE)/inputs.apex: $(PACKAGE)
 $(PACKAGE)/README.APEX: README.APEX $(PACKAGE)
 	cp -v $< $@
 
-$(PACKAGE).tar.gz: $(TARFILE_CONTENTS) $(PACKAGE)/inputs.apex $(PACKAGE)/README.APEX
-	tar -cz --exclude=Makefile.in --exclude=Makefile.am --exclude=config.h.in -f $@ $^
+$(PACKAGE)/%: ior/% $(PACKAGE)
+	cp -v $< $@
+
+$(PACKAGE).tar.gz: $(TARFILE_CONTENTS) $(PACKAGE)/inputs.apex $(PACKAGE)/README.APEX $(PACKAGE)/Makefile.in $(PACKAGE)/META
+	tar -cz --exclude=*.m4 --exclude=Makefile.am -f $@ $^
