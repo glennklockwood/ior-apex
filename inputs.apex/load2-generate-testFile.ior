@@ -6,23 +6,23 @@
 IOR START
 
 ################################################################################
-#   When filePerProc is 0 a single file is created with
-#     fileSize == segmentCount * blockSize * numTasks
-#
-#   When filePerProc is 1 there will be numTasks files created with
-#     fileSize == segmentCount * blockSize
-#
-#   To generate an input dataset for Load 2 you can set the following
-#   parameters to be identical to those specified in your input for the actual
-#   benchmark test (e.g. your load2-posix-filepertask.ior file)
-#
-    numTasks=240
-    segmentCount=512        # must be > fileSize / ( blockSize * numTasks ) where fileSize must be greater than 1.5 times the aggregate DRAM available for use by the page cache
+### When filePerProc is 0 a single file is created with
+###   fileSize == segmentCount * blockSize * numTasks
+###
+### When filePerProc is 1 there will be numTasks files created with
+###   fileSize == segmentCount * blockSize
+###
+### To generate an input dataset for Load 2 you can set the following
+### parameters to be identical to those specified in your input for the actual
+### benchmark test (e.g. your load2-posix-filepertask.ior file)
+###
+    numTasks=10             # number of MPI processes to use
+    segmentCount=9831       # must be > fileSize / ( blockSize * numTasks ) where fileSize must be greater than 1.5 times the aggregate DRAM available for use by the page cache
     transferSize=1M         # size of a single data buffer to be transferred by a single I/O call.
     blockSize=10M           # size of a single process's sequential read/write block
     testFile=datafile.dat   # will read/write files called ./datafile.dat.00000000 ./datafile.dat.00000001 etc
     filePerProc=1           # read/write one file per MPI process
-#
+###
 ################################################################################
 
 ### The following parameters should not have to change to generate the test input
