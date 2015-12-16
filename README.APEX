@@ -62,6 +62,7 @@ Each of these four tests must be run at the following levels of concurrency:
 1. a single compute node
 2. 10% of the proposed system's compute nodes
 3. 50% of the proposed system's compute nodes
+4. sufficient compute nodes to achieve the maximum bandwidth results
 
 These tests must be configured via a combination of input configuration files
 and command line options.  Annotated input configuration files are provided in
@@ -274,7 +275,8 @@ V. Reporting Results
 
 IOR will execute both read and write tests for each run.  The bandwidth
 measurements to be reported are the `Max Write` and `Max Read` values (in 
-units of `MB/s`) reported to stdout.
+units of `MB/s`) reported to stdout.  In addition, the concurrency (number of
+compute nodes and number of MPI processes used) for each run must be stated.
 
 The maximum write and read bandwidths for a single read-and-write test must be
 reported for Load 1.  Reporting the maximum read bandwidth from one run and the
