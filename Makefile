@@ -34,7 +34,7 @@ $(PACKAGE): ior/configure
 	mkdir $@
 
 $(TARFILE_CONTENTS): ior/configure $(PACKAGE) 
-	cp -rv ior/`basename $@` $@
+	if [ -d "ior/`basename $@`" ]; then cp -rv "ior/`basename $@`/." "$@"; else cp -rv "ior/`basename $@`" "$@";fi
 
 $(PACKAGE)/inputs.apex: $(PACKAGE)
 	make -C inputs.apex
