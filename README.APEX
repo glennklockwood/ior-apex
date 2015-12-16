@@ -76,10 +76,10 @@ The Offeror MUST modify the following parameters for each benchmark test:
 * `segmentCount` - number of segments (blocks * numTasks) in a file.  This
   governs the size of the file(s) written/read, and the amount of data 
   written/read by each node must exceed 1.5 times the memory available for the
-  file system's page cache (typically the entire node's DRAM).
-* `memoryPerNode` - size (in bytes) of each node's DRAM to be filled before
+  file system's page cache (typically the entire node's RAM).
+* `memoryPerNode` - size (in bytes) of each node's RAM to be filled before
   running the benchmark test.  This value must be no less than 80% of the total
-  DRAM available on each compute node and is intended to represent the memory
+  RAM available on each compute node and is intended to represent the memory
   footprint of a real application.
 
 In addition, the Offeror MAY modify the following parameters for each test:
@@ -93,12 +93,12 @@ In addition, the Offeror MAY modify the following parameters for each test:
 * `collective` - MPI-IO collective vs. independent operation mode
 
 As mentioned above, `segmentCount` must be set so that the total amount of
-data written is greater than 1.5 times the amount of DRAM on the compute nodes.
+data written is greater than 1.5 times the amount of RAM on the compute nodes.
 The total fileSize is given by
 
     fileSize = segmentCount * blockSize * numTasks
 
-So for a 10-node test with an aggregate 640 GB of DRAM, fileSize must be at
+So for a 10-node test with an aggregate 640 GB of RAM, fileSize must be at
 least 960 GB.  Assuming `blockSize=1MB` and `numTasks=240` (24 MPI processes
 per node) is optimal, an appropriate `segmentCount` would be
 
@@ -151,7 +151,7 @@ The Offeror MUST modify the following parameters for each benchmark test:
 * `segmentCount` - number of segments (blocks) in a file.  This governs the
   size of the file(s) read, and the amount of data read by each node must
   exceed 1.5 times the memory available for the file system's page cache
-  (typically the entire node's DRAM).
+  (typically the entire node's RAM).
 
 In addition, the Offeror MAY modify the following parameters for each test:
 
@@ -176,12 +176,12 @@ Load 2 benchmark:
     su -c "echo 1 > /proc/sys/vm/drop_caches"
 
 As with Load 1, `segmentCount` must be set so that the total amount of data
-read is greater than 1.5 times the amount of DRAM on the compute nodes.  The
+read is greater than 1.5 times the amount of RAM on the compute nodes.  The
 total fileSize is given by
 
     fileSize = segmentCount * 10 MiB * numTasks
 
-So for a 10-node test with an aggregate 640 GB of DRAM, fileSize must be at
+So for a 10-node test with an aggregate 640 GB of RAM, fileSize must be at
 least 960 GB.  This test requires 1 MPI process per node, so an appropriate
 `segmentCount` would be
 
@@ -217,10 +217,10 @@ The Offeror MUST modify the following parameters for each benchmark test:
 * `segmentCount` - number of segments (blocks * numTasks) in a file.  This
   governs the size of the file(s) written/read, and the amount of data 
   written/read by each node must exceed 1.5 times the memory available for the
-  file system's page cache (typically the entire node's DRAM).
-* `memoryPerNode` - size (in bytes) of each node's DRAM to be filled before
+  file system's page cache (typically the entire node's RAM).
+* `memoryPerNode` - size (in bytes) of each node's RAM to be filled before
   running the benchmark test.  This value must be no less than 80% of the total
-  DRAM available on each compute node and is intended to represent the memory
+  RAM available on each compute node and is intended to represent the memory
   footprint of a real application.
 
 In addition, the Offeror MAY modify the following parameter for each test:
@@ -228,12 +228,12 @@ In addition, the Offeror MAY modify the following parameter for each test:
 * `testFile` - path to data files to be read or written for this benchmark
 
 As with the other loads, `segmentCount` must be set so that the total amount
-of data written is greater than 1.5 times the amount of DRAM on the compute
+of data written is greater than 1.5 times the amount of RAM on the compute
 nodes.  The total fileSize is given by
 
     fileSize = segmentCount * 4K * numTasks
 
-So for a 10-node test with an aggregate 640 GB of DRAM, fileSize must be at
+So for a 10-node test with an aggregate 640 GB of RAM, fileSize must be at
 least 960 GB.  Assuming `numTasks=240` (24 MPI processes per node), an
 appropriate `segmentCount` would be
 
@@ -307,7 +307,6 @@ As with Load 1, the maximum write and read bandwidths for a single
 read-and-write test must be reported for Load 3.  Read bandwidth has slightly
 higher importance for this test, so report results from the run with the highest
 read rate.
-
 
 ### Benchmark Platform Description
 
