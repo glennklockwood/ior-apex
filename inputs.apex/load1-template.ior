@@ -20,7 +20,7 @@ IOR START
 ### You MUST NOT change the following parameters
     reorderTasksConstant=1  # each node n writes data; that data is then read by node n+1
     intraTestBarriers=1     # use barriers between open/read/write/close
-    repetitions=1           # you may execute the same test multiple times but ensure that all nodes' page caches are flushed before re-running IOR
+    repetitions=1           # executes the same test multiple times
     verbose=2               # print additional information about the job geometry
     fsync=1                 # for POSIX api call fsync(2) before close(2)
 

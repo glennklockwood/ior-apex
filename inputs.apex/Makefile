@@ -18,6 +18,7 @@ load1-mpiio-filepertask.ior: load1-template.ior
 	    -e 's/writeFile=[01]/writeFile=1/' \
 	    -e '/^ *blastMode=/d' \
 	    -e '3,3s/Run the .*$$/Run the IOR benchmark with the MPI-IO I\/O API and one file per task/' \
+	    -e 's/testFile=\([^ #]*\) *# will read\/write .*$$/testFile=\1   # will read\/write files called .\/\1.00000000 .\/\1.00000001 etc/' \
 	    -e 's/filePerProc=[01]/filePerProc=1/' $< > $@
 load1-mpiio-sharedfile.ior: load1-template.ior
 	sed -e 's/api=[^ ]*/api=MPIIO/' \
@@ -26,7 +27,7 @@ load1-mpiio-sharedfile.ior: load1-template.ior
 	    -e 's/writeFile=[01]/writeFile=1/' \
 	    -e '/^ *blastMode=/d' \
 	    -e '3,3s/Run the .*$$/Run the IOR benchmark with the MPI-IO I\/O API and a single shared file/' \
-	    -e 's/testFile=\(.*\)# will read\/write .*$$/testFile=\1# will read\/write to a shared file called \1/' \
+	    -e 's/testFile=\([^ #]*\) *# will read\/write .*$$/testFile=\1   # will read\/write to a shared file called \1/' \
 	    -e 's/filePerProc=[01]/filePerProc=0/' $< > $@
 
 load1-posix-filepertask.ior: load1-template.ior
@@ -36,6 +37,7 @@ load1-posix-filepertask.ior: load1-template.ior
 	    -e 's/writeFile=[01]/writeFile=1/' \
 	    -e '/^ *blastMode=/d' \
 	    -e '3,3s/Run the .*$$/Run the IOR benchmark with the POSIX I\/O API and one file per task/' \
+	    -e 's/testFile=\([^ #]*\) *# will read\/write .*$$/testFile=\1   # will read\/write files called .\/\1.00000000 .\/\1.00000001 etc/' \
 	    -e 's/filePerProc=[01]/filePerProc=1/' $< > $@
 
 load1-posix-sharedfile.ior: load1-template.ior
@@ -45,7 +47,7 @@ load1-posix-sharedfile.ior: load1-template.ior
 	    -e 's/writeFile=[01]/writeFile=1/' \
 	    -e '/^ *blastMode=/d' \
 	    -e '3,3s/Run the .*$$/Run the IOR benchmark with the POSIX I\/O API and a single shared file/' \
-	    -e 's/testFile=\(.*\)# will read\/write .*$$/testFile=\1# will read\/write to a shared file called \1/' \
+	    -e 's/testFile=\([^ #]*\) *# will read\/write .*$$/testFile=\1   # will read\/write to a shared file called \1/' \
 	    -e 's/filePerProc=[01]/filePerProc=0/' $< > $@
 
 load2-template.ior: load1-template.ior
@@ -58,14 +60,19 @@ load2-template.ior: load1-template.ior
 	    -e 's/blastMode=[01]/blastMode=1/' \
 	    -e 's/transferSize=[^ ]*/transferSize=4K/' \
 	    -e 's/blockSize=[^ ]* /blockSize=10M/' \
-	    -e '3,3s/Run the .*$$/Run the IOR benchmark with the POSIX I\/O API and one file per task/' \
 	    -e 's/.  You must find the optimal transferSize for the storage system.//' > $@
 
 load2-posix-filepertask.ior: load2-template.ior
-	sed -e 's/filePerProc=[01]/filePerProc=1/' $< > $@
+	sed \
+	    -e 's/testFile=\([^ #]*\) *# will read\/write .*$$/testFile=\1   # will read\/write files called .\/\1.00000000 .\/\1.00000001 etc/' \
+	    -e '3,3s/Run the .*$$/Run the IOR benchmark with the POSIX I\/O API and one file per task/' \
+	    -e 's/filePerProc=[01]/filePerProc=1/' $< > $@
 
 load2-posix-sharedfile.ior: load2-template.ior
-	sed -e 's/filePerProc=[01]/filePerProc=0/' $< > $@
+	sed \
+	    -e 's/testFile=\([^ #]*\) *# will read\/write .*$$/testFile=\1   # will read\/write to a shared file called \1/' \
+	    -e '3,3s/Run the .*$$/Run the IOR benchmark with the POSIX I\/O API and a single shared file/' \
+	    -e 's/filePerProc=[01]/filePerProc=0/' $< > $@
 
 load3-template.ior: load1-template.ior
 	ed -s $< <<< $$'14m20\n14m20\nw /dev/stdout' | \
@@ -76,15 +83,20 @@ load3-template.ior: load1-template.ior
 	    -e '/^ *collective=/d' \
 	    -e '/^ *blastMode=/d' \
 	    -e 's/Size=[^ ]*/Size=4K/' \
-	    -e '3,3s/Run the .*$$/Run the IOR benchmark with the POSIX I\/O API and one file per task/' \
 	    -e 's/.  You must find the optimal transferSize for the storage system.//' \
 	    -e 's/filePerProc=[01]/filePerProc=1/' > $@
 
 load3-posix-filepertask.ior: load3-template.ior
-	sed -e 's/filePerProc=[01]/filePerProc=1/' $< > $@
+	sed \
+	    -e 's/testFile=\([^ #]*\) *# will read\/write .*$$/testFile=\1   # will read\/write files called .\/\1.00000000 .\/\1.00000001 etc/' \
+	    -e '3,3s/Run the .*$$/Run the IOR benchmark with the POSIX I\/O API and one file per task/' \
+	    -e 's/filePerProc=[01]/filePerProc=1/' $< > $@
 
 load3-posix-sharedfile.ior: load3-template.ior
-	sed -e 's/filePerProc=[01]/filePerProc=0/' $< > $@
+	sed \
+	    -e 's/testFile=\([^ #]*\) *# will read\/write .*$$/testFile=\1   # will read\/write to a shared file called \1/' \
+	    -e '3,3s/Run the .*$$/Run the IOR benchmark with the POSIX I\/O API and a single shared file/' \
+	    -e 's/filePerProc=[01]/filePerProc=0/' $< > $@
 
 clean:
 	-rm $(INPUTS) load[23]-template.ior
