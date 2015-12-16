@@ -98,9 +98,9 @@ The total fileSize is given by
 
     fileSize = segmentCount * blockSize * numTasks
 
-So for a 10-node test with an aggregate 640 GB of DRAM, fileSize must be 960 GB.
-Assuming `blockSize=1MB` and `numTasks=240` (24 MPI processes per node) is
-optimal, an appropriate `segmentCount` would be
+So for a 10-node test with an aggregate 640 GB of DRAM, fileSize must be at
+least 960 GB.  Assuming `blockSize=1MB` and `numTasks=240` (24 MPI processes
+per node) is optimal, an appropriate `segmentCount` would be
 
     segmentCount = fileSize / ( blockSize * numTasks ) = 4096
 
@@ -175,6 +175,18 @@ Load 2 benchmark:
 
     su -c "echo 1 > /proc/sys/vm/drop_caches"
 
+As with Load 1, `segmentCount` must be set so that the total amount of data
+read is greater than 1.5 times the amount of DRAM on the compute nodes.  The
+total fileSize is given by
+
+    fileSize = segmentCount * 10 MiB * numTasks
+
+So for a 10-node test with an aggregate 640 GB of DRAM, fileSize must be at
+least 960 GB.  This test requires 1 MPI process per node, so an appropriate
+`segmentCount` would be
+
+    segmentCount = fileSize / ( 10 MiB * numTasks ) = 9831
+
 ### Load 3: Fully Random Loads
 
 As with Load 1, this benchmark is intended to measure the throughput of the
@@ -215,20 +227,17 @@ In addition, the Offeror MAY modify the following parameter for each test:
 
 * `testFile` - path to data files to be read or written for this benchmark
 
-As mentioned above, `segmentCount` must be set so that the total amount of
-data written is greater than 1.5 times the amount of DRAM on the compute nodes.
-The total fileSize is given by
+As with the other loads, `segmentCount` must be set so that the total amount
+of data written is greater than 1.5 times the amount of DRAM on the compute
+nodes.  The total fileSize is given by
 
     fileSize = segmentCount * 4K * numTasks
 
-So for a 10-node test with an aggregate 640 GB of DRAM, fileSize must be 960 GB.
-Assuming `numTasks=240` (24 MPI processes per node), an appropriate 
-`segmentCount` would be
+So for a 10-node test with an aggregate 640 GB of DRAM, fileSize must be at
+least 960 GB.  Assuming `numTasks=240` (24 MPI processes per node), an
+appropriate `segmentCount` would be
 
     segmentCount = fileSize / ( 4K * numTasks ) = 1048576
-
-Page caches on the storage subsystem's servers may still be used, but they must
-be configured as they would be for the delivered Crossroads/NERSC-9 systems.
 
 ### Running IOR
 

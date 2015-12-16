@@ -57,7 +57,7 @@ load2-template.ior: load1-template.ior
 	    -e 's/writeFile=[01]/writeFile=0/' \
 	    -e '/^ *collective=/d' \
 	    -e '/^ *memoryPerNode=/d' \
-	    -e 's/segmentCount=......./segmentCount=9830   /' \
+	    -e 's/segmentCount=......./segmentCount=9831   /' \
 	    -e 's/blastMode=[01]/blastMode=1/' \
 	    -e 's/transferSize=[^ ]*/transferSize=4K/' \
 	    -e 's/blockSize=[^ ]* /blockSize=10M/' \
