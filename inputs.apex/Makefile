@@ -53,6 +53,8 @@ load1-posix-sharedfile.ior: load1-template.ior
 load2-template.ior: load1-template.ior
 	ed -s $< <<< $$'14m20\n14m20\nw /dev/stdout' | \
 	sed -e 's/api=[^ ]*/api=POSIX/' \
+	    -e 's/numTasks=.../numTasks=10 /' \
+	    -e 's/You may choose to use one or more MPI processes per node./You must use only 1 MPI process per node./' \
 	    -e 's/readFile=[01]/readFile=1/' \
 	    -e 's/writeFile=[01]/writeFile=0/' \
 	    -e '/^ *collective=/d' \
