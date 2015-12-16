@@ -60,6 +60,7 @@ load2-template.ior: load1-template.ior
 	    -e 's/blastMode=[01]/blastMode=1/' \
 	    -e 's/transferSize=[^ ]*/transferSize=4K/' \
 	    -e 's/blockSize=[^ ]* /blockSize=10M/' \
+	    -e 's/must be the same as transferSize/unit of work for each thread/' \
 	    -e 's/.  You must find the optimal transferSize for the storage system.//' > $@
 
 load2-posix-filepertask.ior: load2-template.ior
