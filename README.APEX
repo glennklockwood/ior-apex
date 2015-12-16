@@ -163,7 +163,7 @@ Because this test is a read-only test, the input data files to be read by IOR
 must be generated before these benchmark tests are run.  This can be done either
 using the standard `dd` command, e.g., 
 
-    dd if=/dev/urandom of=/scratch/datafile.dat bs=1G count=5
+    dd if=/dev/urandom of=/scratch/datafile.dat bs=1G count=5 iflag=fullblock oflag=direct
 
 or using a separate IOR run (whose performance would NOT be reported).  An
 example IOR input to do this is included in the `inputs.apex/` subdirectory.
