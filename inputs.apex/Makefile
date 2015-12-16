@@ -57,6 +57,7 @@ load2-template.ior: load1-template.ior
 	    -e 's/writeFile=[01]/writeFile=0/' \
 	    -e '/^ *collective=/d' \
 	    -e '/^ *memoryPerNode=/d' \
+	    -e 's/segmentCount=......./segmentCount=9830   /' \
 	    -e 's/blastMode=[01]/blastMode=1/' \
 	    -e 's/transferSize=[^ ]*/transferSize=4K/' \
 	    -e 's/blockSize=[^ ]* /blockSize=10M/' \
@@ -81,6 +82,7 @@ load3-template.ior: load1-template.ior
 	    -e 's/readFile=[01]/readFile=1/' \
 	    -e 's/writeFile=[01]/writeFile=1/' \
 	    -e 's/randomOffset=[01]/randomOffset=1/' \
+	    -e 's/segmentCount=......./segmentCount=1048576/' \
 	    -e '/^ *collective=/d' \
 	    -e '/^ *blastMode=/d' \
 	    -e 's/Size=[^ ]*/Size=4K/' \
