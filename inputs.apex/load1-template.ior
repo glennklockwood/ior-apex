@@ -8,7 +8,7 @@ IOR START
 ### You MUST change the following parameters (see README.APEX)
     numTasks=240            # number of MPI processes to use.  You may choose to use one or more MPI processes per node.
     segmentCount=4096       # must be > fileSize / ( blockSize * numTasks ) where fileSize must be greater than 1.5 times the aggregate DRAM available for use by the page cache
-    memoryPerNode=52G       # must be > 80% of the node's DRAM available for use by the page cache
+    memoryPerNode=80%       # must be > 80% of the node's DRAM available for use by the page cache
 
 ### You MAY change the following parameters
     transferSize=1M         # size of a single data buffer to be transferred by a single I/O call.  You must find the optimal transferSize for the storage system.

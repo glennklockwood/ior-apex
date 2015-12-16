@@ -77,7 +77,7 @@ The Offeror MUST modify the following parameters for each benchmark test:
   governs the size of the file(s) written/read, and the amount of data 
   written/read by each node must exceed 1.5 times the memory available for the
   file system's page cache (typically the entire node's RAM).
-* `memoryPerNode` - size (in bytes) of each node's RAM to be filled before
+* `memoryPerNode` - size (in %) of each node's RAM to be filled before
   running the benchmark test.  This value must be no less than 80% of the total
   RAM available on each compute node and is intended to represent the memory
   footprint of a real application.
@@ -218,7 +218,7 @@ The Offeror MUST modify the following parameters for each benchmark test:
   governs the size of the file(s) written/read, and the amount of data 
   written/read by each node must exceed 1.5 times the memory available for the
   file system's page cache (typically the entire node's RAM).
-* `memoryPerNode` - size (in bytes) of each node's RAM to be filled before
+* `memoryPerNode` - size (in %) of each node's RAM to be filled before
   running the benchmark test.  This value must be no less than 80% of the total
   RAM available on each compute node and is intended to represent the memory
   footprint of a real application.
