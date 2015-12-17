@@ -22,7 +22,7 @@ INPUTS_APEX = load1-posix-filepertask.ior \
               load3-posix-filepertask.ior \
               load3-posix-sharedfile.ior
 
-$(PACKAGE).tar.gz: $(PACKAGE) $(TARFILE_CONTENTS) $(PACKAGE)/inputs.apex
+$(PACKAGE).tar.gz: $(TARFILE_CONTENTS) $(PACKAGE)/inputs.apex
 	tar -cz --exclude=*.m4 --exclude=Makefile.am -f $@ $^
 
 $(PACKAGE):
@@ -39,7 +39,7 @@ $(PACKAGE)/inputs.apex:
 $(PACKAGE)/README.APEX: README.APEX
 	cp -v $< $@
 
-$(PACKAGE)/%: ior/%
+$(PACKAGE)/%: $(PACKAGE) ior/%
 	if [ -d "ior/`basename $@`" ]; then cp -rv "ior/`basename $@`/." "$@"; else cp -rv "ior/`basename $@`" "$@";fi
 
 clean:
