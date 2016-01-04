@@ -330,37 +330,3 @@ include:
 * Compiler name and version, compiler options, and libraries used to build
   benchmarks
 
-### Performance Projections
-
-Benchmark results (or projections) for the proposed system shall be reported
-in the APEX results spreadsheet. Projections shall be rigorously derived and
-documented.  Specifically, the output files (including stdout and stderr) on
-which the projections are based, as well as a description of the projection
-method, must be included.  
-
-In addition, each system used for benchmark projections must be described per
-the "Benchmark Platform Description" section above.  Enter the corresponding
-letter of the "System" column of Table 3 into the "System" column of the
-benchmark result tables.  For proposals that call for a phased deployment of
-technology, duplicate the tables and provide the performance information for
-each proposed phase.
-
-Note that in the supplied spreadsheet, the "Proposed System Node Count" entry
-refers to the value for the full, proposed system, whether benchmarked or
-projected.  The benchmark data from which projections are derived should be
-included separately from the spreadsheet.
-
-### Code Modifications
-
-If the benchmark code is modified (per Section IV, Permitted Modifications),
-a complete history of changes made to the benchmark code must be supplied.
-These changes should take the form of one or more diffs (or patch files) along
-with documentation justifying the changes.
-
-### Submission of Results
-
-A paper version of all completed tables shall be submitted as part of the RFP
-response. Additionally, the Offeror shall submit electronically all completed
-tables, benchmark codes, and output files (excluding binary data files), and
-documentation on any code optimizations or configuration changes. The submitted
-source should be in a form that can be readily compiled on the proposed system.
